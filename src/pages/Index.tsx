@@ -37,6 +37,12 @@ const Index = () => {
         } else if (category === "series") {
           const res = await fetchPopularTVShows();
           setSearchResults(res.results);
+        } else if (category === "movies") {
+          const [pop, top] = await Promise.all([fetchPopularMovies(), fetchTopRatedMovies()]);
+          setSearchResults([...pop.results, ...top.results]);
+        } else if (category === "new") {
+          const [trend, up] = await Promise.all([fetchTrendingMovies(), fetchUpcomingMovies()]);
+          setSearchResults([...trend.results, ...up.results]);
         } else {
           const [pop, trend, top, up, tv] = await Promise.all([
             fetchPopularMovies(),
@@ -58,7 +64,7 @@ const Index = () => {
       }
     };
     load();
-  }, [searchQuery]);
+  }, [searchQuery, category]);
 
   const showSearch = !!searchQuery || !!category;
 
@@ -69,8 +75,8 @@ const Index = () => {
       <div className={`${showSearch ? "pt-24" : "-mt-16"} relative z-10 pb-8`}>
         {showSearch ? (
           <TmdbMovieGrid
-            title={searchQuery ? `Results for "${searchQuery}"` : category === "series" ? "📺 TV Shows" : category === "movies" ? "🎬 Movies" : "🆕 New & Popular"}
-            movies={searchQuery ? searchResults : category === "series" ? searchResults : popular}
+            title={searchQuery ? `Results for "${searchQuery}"` : category === "series" ? "📺 TV Shows" : category === "movies" ? "🎬 Movies" : category === "new" ? "🆕 New & Popular" : ""}
+            movies={searchResults}
             loading={loading}
           />
         ) : (
