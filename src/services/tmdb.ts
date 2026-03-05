@@ -4,13 +4,16 @@ const IMAGE_BASE = "https://image.tmdb.org/t/p";
 
 export type TmdbMovie = {
   id: number;
-  title: string;
+  title?: string;
+  name?: string;
   poster_path: string | null;
   backdrop_path: string | null;
   vote_average: number;
-  release_date: string;
+  release_date?: string;
+  first_air_date?: string;
   overview: string;
   genre_ids: number[];
+  media_type?: string;
 };
 
 export type TmdbResponse = {
@@ -49,7 +52,25 @@ export const fetchUpcomingMovies = async (): Promise<TmdbResponse> => {
 };
 
 export const searchMovies = async (query: string): Promise<TmdbResponse> => {
-  const res = await fetch(`${BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
-  if (!res.ok) throw new Error("Failed to search movies");
+  const res = await fetch(`${BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error("Failed to search");
+  return res.json();
+};
+
+export const fetchPopularTVShows = async (): Promise<TmdbResponse> => {
+  const res = await fetch(`${BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}`);
+  if (!res.ok) throw new Error("Failed to fetch TV shows");
+  return res.json();
+};
+
+export const fetchMovieDetails = async (id: number) => {
+  const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits`);
+  if (!res.ok) throw new Error("Failed to fetch movie details");
+  return res.json();
+};
+
+export const fetchTVDetails = async (id: number) => {
+  const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits`);
+  if (!res.ok) throw new Error("Failed to fetch TV details");
   return res.json();
 };

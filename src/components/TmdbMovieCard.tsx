@@ -1,13 +1,19 @@
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { getImageUrl, type TmdbMovie } from "@/services/tmdb";
 
 const TmdbMovieCard = ({ movie }: { movie: TmdbMovie }) => {
+  const navigate = useNavigate();
+  const title = movie.title || movie.name || "Untitled";
+  const year = (movie.release_date || movie.first_air_date || "").slice(0, 4);
+  const mediaType = movie.media_type || (movie.first_air_date ? "tv" : "movie");
   return (
     <motion.div
       className="relative cursor-pointer group"
       whileHover={{ scale: 1.05, zIndex: 20 }}
       transition={{ duration: 0.2 }}
+      onClick={() => navigate(`/tmdb/${mediaType}/${movie.id}`)}
     >
       <div className="relative aspect-[2/3] overflow-hidden rounded-lg">
         <img
@@ -30,10 +36,10 @@ const TmdbMovieCard = ({ movie }: { movie: TmdbMovie }) => {
 
         <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <p className="font-body text-sm font-semibold text-foreground line-clamp-2">
-            {movie.title}
+            {title}
           </p>
           <p className="font-body text-[10px] text-muted-foreground mt-0.5">
-            {movie.release_date?.slice(0, 4)}
+            {year}
           </p>
         </div>
       </div>
