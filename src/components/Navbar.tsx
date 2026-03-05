@@ -21,7 +21,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-8">
         <div className="flex items-center gap-8">
           <h1 className="font-display text-3xl tracking-wider text-primary">
-            STREAM<span className="text-accent">UZ</span>
+            bodroq<span className="text-accent">.uz</span>
           </h1>
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
