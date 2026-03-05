@@ -75,8 +75,8 @@ const Index = () => {
       <div className={`${showSearch ? "pt-24" : "-mt-16"} relative z-10 pb-8`}>
         {showSearch ? (
           <TmdbMovieGrid
-            title={searchQuery ? `Results for "${searchQuery}"` : category === "series" ? "📺 TV Shows" : category === "movies" ? "🎬 Movies" : "🆕 New & Popular"}
-            movies={searchQuery ? searchResults : category === "series" ? searchResults : popular}
+            title={searchQuery ? `Results for "${searchQuery}"` : category === "series" ? "📺 TV Shows" : category === "movies" ? "🎬 Movies" : category === "new" ? "🆕 New & Popular" : ""}
+            movies={searchResults}
             loading={loading}
           />
         ) : (
