@@ -37,6 +37,12 @@ const Index = () => {
         } else if (category === "series") {
           const res = await fetchPopularTVShows();
           setSearchResults(res.results);
+        } else if (category === "movies") {
+          const [pop, top] = await Promise.all([fetchPopularMovies(), fetchTopRatedMovies()]);
+          setSearchResults([...pop.results, ...top.results]);
+        } else if (category === "new") {
+          const [trend, up] = await Promise.all([fetchTrendingMovies(), fetchUpcomingMovies()]);
+          setSearchResults([...trend.results, ...up.results]);
         } else {
           const [pop, trend, top, up, tv] = await Promise.all([
             fetchPopularMovies(),
@@ -58,7 +64,7 @@ const Index = () => {
       }
     };
     load();
-  }, [searchQuery]);
+  }, [searchQuery, category]);
 
   const showSearch = !!searchQuery || !!category;
 
