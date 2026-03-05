@@ -2,7 +2,12 @@ import { useState } from "react";
 import { Search, Bell, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const navLinks = ["Home", "Movies", "Series", "New & Popular"];
+const navLinks = [
+  { label: "Home", color: "text-emerald-400 hover:text-emerald-300" },
+  { label: "Movies", color: "text-sky-400 hover:text-sky-300" },
+  { label: "Series", color: "text-violet-400 hover:text-violet-300" },
+  { label: "New & Popular", color: "text-emerald-400 hover:text-emerald-300" },
+];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,10 +31,10 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <button
-                key={link}
-                className="font-body text-sm text-secondary-foreground hover:text-foreground transition-colors"
+                key={link.label}
+                className={`font-body text-sm transition-colors ${link.color}`}
               >
-                {link}
+                {link.label}
               </button>
             ))}
           </div>
@@ -62,10 +67,10 @@ const Navbar = () => {
             <div className="flex flex-col gap-3 px-6 py-4">
               {navLinks.map((link) => (
                 <button
-                  key={link}
-                  className="text-left font-body text-secondary-foreground hover:text-foreground transition-colors py-1"
+                  key={link.label}
+                  className={`text-left font-body transition-colors py-1 ${link.color}`}
                 >
-                  {link}
+                  {link.label}
                 </button>
               ))}
             </div>
