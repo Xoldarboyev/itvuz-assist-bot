@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MovieDetail from "./pages/MovieDetail";
+import TmdbDetail from "./pages/TmdbDetail";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/tmdb/:type/:id" element={<TmdbDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
