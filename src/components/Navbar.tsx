@@ -3,10 +3,10 @@ import { Search, Bell, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { label: "Home", color: "text-emerald-400 hover:text-emerald-300" },
-  { label: "Movies", color: "text-sky-400 hover:text-sky-300" },
-  { label: "Series", color: "text-violet-400 hover:text-violet-300" },
-  { label: "New & Popular", color: "text-emerald-400 hover:text-emerald-300" },
+  { label: "Home", color: "text-yellow-400 hover:text-yellow-300" },
+  { label: "Movies", color: "text-yellow-400 hover:text-yellow-300" },
+  { label: "Series", color: "text-yellow-400 hover:text-yellow-300" },
+  { label: "New & Popular", color: "text-yellow-400 hover:text-yellow-300" },
 ];
 
 const Navbar = () => {
