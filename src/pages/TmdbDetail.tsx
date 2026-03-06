@@ -158,8 +158,10 @@ const TmdbDetail = () => {
                     key={server}
                     src={servers[server]}
                     className="w-full aspect-video rounded-lg border border-border"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
                     allowFullScreen
-                    allow="autoplay; encrypted-media"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    referrerPolicy="no-referrer"
                   />
                 </motion.div>
               ) : (
