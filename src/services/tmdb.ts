@@ -64,13 +64,13 @@ export const fetchPopularTVShows = async (): Promise<TmdbResponse> => {
 };
 
 export const fetchMovieDetails = async (id: number) => {
-  const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits`);
+  const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits,external_ids`);
   if (!res.ok) throw new Error("Failed to fetch movie details");
   return res.json();
 };
 
 export const fetchTVDetails = async (id: number) => {
-  const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits`);
+  const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&append_to_response=credits,external_ids`);
   if (!res.ok) throw new Error("Failed to fetch TV details");
   return res.json();
 };

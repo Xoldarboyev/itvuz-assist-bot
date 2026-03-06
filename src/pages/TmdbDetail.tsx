@@ -122,8 +122,25 @@ const TmdbDetail = () => {
             </div>
 
             {playing && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
-                <p className="text-muted-foreground font-body">🎬 Streaming player would appear here</p>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
+                {(() => {
+                  const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
+                  const embedUrl = type === "tv"
+                    ? `https://vidsrc.xyz/embed/tv/${imdbId}`
+                    : `https://vidsrc.xyz/embed/movie/${imdbId}`;
+                  return imdbId ? (
+                    <iframe
+                      src={embedUrl}
+                      className="w-full aspect-video rounded-lg border border-border"
+                      allowFullScreen
+                      allow="autoplay; encrypted-media"
+                    />
+                  ) : (
+                    <div className="aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
+                      <p className="text-muted-foreground font-body">Stream unavailable for this title</p>
+                    </div>
+                  );
+                })()}
               </motion.div>
             )}
           </motion.div>
