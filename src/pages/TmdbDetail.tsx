@@ -13,7 +13,7 @@ const TmdbDetail = () => {
   const navigate = useNavigate();
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [server, setServer] = useState<"vidsrc" | "2embed" | "vidlink">("vidsrc");
 
   useEffect(() => {
