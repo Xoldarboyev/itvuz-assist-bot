@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { MessageCircle, Trash2 } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 type Comment = {
   id: string;
@@ -18,6 +19,7 @@ type Comment = {
 
 const CommentSection = ({ movieId }: { movieId: number }) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
   const [guestName, setGuestName] = useState("");
@@ -49,7 +51,7 @@ const CommentSection = ({ movieId }: { movieId: number }) => {
     });
     setLoading(false);
     if (error) {
-      toast.error("Failed to post comment");
+      toast.error(t.commentFailed);
     } else {
       setContent("");
       fetchComments();
@@ -64,27 +66,16 @@ const CommentSection = ({ movieId }: { movieId: number }) => {
   return (
     <div>
       <h3 className="font-display text-2xl text-foreground flex items-center gap-2 mb-4">
-        <MessageCircle className="h-5 w-5" /> Comments ({comments.length})
+        <MessageCircle className="h-5 w-5" /> {t.comments} ({comments.length})
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-3 mb-8">
         {!user && (
-          <Input
-            placeholder="Your name (optional)"
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-            maxLength={50}
-          />
+          <Input placeholder={t.yourName} value={guestName} onChange={(e) => setGuestName(e.target.value)} maxLength={50} />
         )}
-        <Textarea
-          placeholder="Write a comment..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          maxLength={500}
-          required
-        />
+        <Textarea placeholder={t.writeComment} value={content} onChange={(e) => setContent(e.target.value)} maxLength={500} required />
         <Button type="submit" size="sm" disabled={loading}>
-          {loading ? "Posting..." : "Post Comment"}
+          {loading ? t.posting : t.postComment}
         </Button>
       </form>
 
@@ -108,7 +99,7 @@ const CommentSection = ({ movieId }: { movieId: number }) => {
           </div>
         ))}
         {comments.length === 0 && (
-          <p className="text-muted-foreground font-body text-sm text-center py-8">No comments yet. Be the first!</p>
+          <p className="text-muted-foreground font-body text-sm text-center py-8">{t.noComments}</p>
         )}
       </div>
     </div>

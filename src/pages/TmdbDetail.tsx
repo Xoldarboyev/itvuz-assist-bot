@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import CommentSection from "@/components/CommentSection";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const TmdbDetail = () => {
   const { type, id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
@@ -38,7 +40,7 @@ const TmdbDetail = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="flex items-center justify-center pt-32">
-          <p className="text-muted-foreground font-body">Loading...</p>
+          <p className="text-muted-foreground font-body">{t.loading}</p>
         </div>
       </div>
     );
@@ -49,7 +51,7 @@ const TmdbDetail = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="flex items-center justify-center pt-32">
-          <p className="text-foreground font-body">Not found</p>
+          <p className="text-foreground font-body">{t.notFound}</p>
         </div>
       </div>
     );
@@ -62,7 +64,7 @@ const TmdbDetail = () => {
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast.success("Link copied to clipboard!");
+    toast.success(t.linkCopied);
   };
 
   return (
@@ -70,18 +72,14 @@ const TmdbDetail = () => {
       <Navbar />
       <div className="relative">
         <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
-          <img
-            src={getImageUrl(detail.backdrop_path || detail.poster_path, "original")}
-            alt={title}
-            className="h-full w-full object-cover"
-          />
+          <img src={getImageUrl(detail.backdrop_path || detail.poster_path, "original")} alt={title} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         </div>
 
         <div className="container mx-auto px-4 md:px-8 -mt-32 relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
             <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 font-body text-sm transition-colors">
-              <ArrowLeft className="h-4 w-4" /> Back
+              <ArrowLeft className="h-4 w-4" /> {t.back}
             </button>
 
             <h1 className="font-display text-4xl md:text-6xl text-foreground tracking-wide">{title?.toUpperCase()}</h1>
@@ -93,7 +91,7 @@ const TmdbDetail = () => {
               </span>
               <span>{year}</span>
               {runtime && <span>{runtime}</span>}
-              {detail.number_of_seasons && <span>{detail.number_of_seasons} Season{detail.number_of_seasons > 1 ? "s" : ""}</span>}
+              {detail.number_of_seasons && <span>{detail.number_of_seasons} {t.seasons}{detail.number_of_seasons > 1 ? "" : ""}</span>}
             </div>
 
             <div className="flex flex-wrap gap-2 mt-3">
@@ -106,7 +104,7 @@ const TmdbDetail = () => {
 
             {detail.credits?.cast?.length > 0 && (
               <div className="mt-4">
-                <p className="font-body text-sm text-foreground font-semibold mb-1">Cast</p>
+                <p className="font-body text-sm text-foreground font-semibold mb-1">{t.cast}</p>
                 <p className="font-body text-sm text-muted-foreground">
                   {detail.credits.cast.slice(0, 6).map((c: any) => c.name).join(", ")}
                 </p>
@@ -115,10 +113,10 @@ const TmdbDetail = () => {
 
             <div className="flex gap-3 mt-6">
               <Button onClick={() => setPlaying(!playing)} className="gap-2">
-                <Play className="h-4 w-4" /> {playing ? "Stop" : "Watch Now"}
+                <Play className="h-4 w-4" /> {playing ? t.stop : t.watchNow}
               </Button>
               <Button variant="outline" onClick={handleShare} className="gap-2">
-                <Share2 className="h-4 w-4" /> Share
+                <Share2 className="h-4 w-4" /> {t.share}
               </Button>
             </div>
 
@@ -126,15 +124,9 @@ const TmdbDetail = () => {
               const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
               const tmdbId = detail.id;
               const servers = {
-                vidsrc: type === "tv"
-                  ? `https://vidsrc.xyz/embed/tv/${imdbId}`
-                  : `https://vidsrc.xyz/embed/movie/${imdbId}`,
-                "2embed": type === "tv"
-                  ? `https://www.2embed.cc/embedtv/${imdbId}`
-                  : `https://www.2embed.cc/embed/${imdbId}`,
-                vidlink: type === "tv"
-                  ? `https://vidlink.pro/tv/${tmdbId}`
-                  : `https://vidlink.pro/movie/${tmdbId}`,
+                vidsrc: type === "tv" ? `https://vidsrc.xyz/embed/tv/${imdbId}` : `https://vidsrc.xyz/embed/movie/${imdbId}`,
+                "2embed": type === "tv" ? `https://www.2embed.cc/embedtv/${imdbId}` : `https://www.2embed.cc/embed/${imdbId}`,
+                vidlink: type === "tv" ? `https://vidlink.pro/tv/${tmdbId}` : `https://vidlink.pro/movie/${tmdbId}`,
               };
 
               return imdbId || server === "vidlink" ? (
@@ -145,9 +137,7 @@ const TmdbDetail = () => {
                         key={s}
                         onClick={() => setServer(s)}
                         className={`px-4 py-1.5 rounded-md font-body text-xs font-semibold transition-colors ${
-                          server === s
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                          server === s ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                         }`}
                       >
                         {s === "vidsrc" ? "VidSrc" : s === "2embed" ? "2Embed" : "VidLink"}
@@ -166,7 +156,7 @@ const TmdbDetail = () => {
                 </motion.div>
               ) : (
                 <div className="mt-8 aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
-                  <p className="text-muted-foreground font-body">Stream unavailable for this title</p>
+                  <p className="text-muted-foreground font-body">{t.streamUnavailable}</p>
                 </div>
               );
             })()}

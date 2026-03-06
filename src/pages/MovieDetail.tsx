@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import CommentSection from "@/components/CommentSection";
 import Navbar from "@/components/Navbar";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const MovieDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const movie = movies.find((m) => m.id === Number(id));
   const [inWatchlist, setInWatchlist] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -32,47 +34,45 @@ const MovieDetail = () => {
   if (!movie) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-foreground">Movie not found</p>
+        <p className="text-foreground">{t.movieNotFound}</p>
       </div>
     );
   }
 
   const toggleWatchlist = async () => {
     if (!user) {
-      toast.error("Please login to add to watchlist");
+      toast.error(t.loginToWatchlist);
       return;
     }
     if (inWatchlist) {
       await supabase.from("watchlist").delete().eq("user_id", user.id).eq("movie_id", movie.id);
       setInWatchlist(false);
-      toast.success("Removed from watchlist");
+      toast.success(t.removedFromWatchlist);
     } else {
       await supabase.from("watchlist").insert({ user_id: user.id, movie_id: movie.id });
       setInWatchlist(true);
-      toast.success("Added to watchlist");
+      toast.success(t.addedToWatchlist);
     }
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast.success("Link copied to clipboard!");
+    toast.success(t.linkCopied);
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="relative">
-        {/* Hero image */}
         <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
           <img src={movie.image} alt={movie.title} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         </div>
 
-        {/* Content */}
         <div className="container mx-auto px-4 md:px-8 -mt-32 relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
             <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 font-body text-sm transition-colors">
-              <ArrowLeft className="h-4 w-4" /> Back
+              <ArrowLeft className="h-4 w-4" /> {t.back}
             </button>
 
             <h1 className="font-display text-4xl md:text-6xl text-foreground tracking-wide">{movie.title.toUpperCase()}</h1>
@@ -94,25 +94,24 @@ const MovieDetail = () => {
 
             <div className="flex gap-3 mt-6">
               <Button onClick={() => setPlaying(!playing)} className="gap-2">
-                <Play className="h-4 w-4" /> {playing ? "Stop" : "Watch Now"}
+                <Play className="h-4 w-4" /> {playing ? t.stop : t.watchNow}
               </Button>
               <Button variant="outline" onClick={toggleWatchlist} className="gap-2">
                 {inWatchlist ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-                {inWatchlist ? "In Watchlist" : "Add to Watchlist"}
+                {inWatchlist ? t.inWatchlist : t.addToWatchlist}
               </Button>
               <Button variant="outline" onClick={handleShare} className="gap-2">
-                <Share2 className="h-4 w-4" /> Share
+                <Share2 className="h-4 w-4" /> {t.share}
               </Button>
             </div>
 
             {playing && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
-                <p className="text-muted-foreground font-body">🎬 Streaming player would appear here</p>
+                <p className="text-muted-foreground font-body">{t.streamingPlaceholder}</p>
               </motion.div>
             )}
           </motion.div>
 
-          {/* Comments */}
           <div className="max-w-4xl mt-12 pb-12">
             <CommentSection movieId={movie.id} />
           </div>
