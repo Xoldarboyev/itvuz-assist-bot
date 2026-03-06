@@ -13,7 +13,8 @@ const TmdbDetail = () => {
   const navigate = useNavigate();
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
+  const [server, setServer] = useState<"vidsrc" | "2embed" | "vidlink">("vidsrc");
 
   useEffect(() => {
     const load = async () => {
@@ -121,28 +122,52 @@ const TmdbDetail = () => {
               </Button>
             </div>
 
-            {playing && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-                {(() => {
-                  const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
-                  const embedUrl = type === "tv"
-                    ? `https://vidsrc.xyz/embed/tv/${imdbId}`
-                    : `https://vidsrc.xyz/embed/movie/${imdbId}`;
-                  return imdbId ? (
-                    <iframe
-                      src={embedUrl}
-                      className="w-full aspect-video rounded-lg border border-border"
-                      allowFullScreen
-                      allow="autoplay; encrypted-media"
-                    />
-                  ) : (
-                    <div className="aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
-                      <p className="text-muted-foreground font-body">Stream unavailable for this title</p>
-                    </div>
-                  );
-                })()}
-              </motion.div>
-            )}
+            {playing && (() => {
+              const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
+              const tmdbId = detail.id;
+              const servers = {
+                vidsrc: type === "tv"
+                  ? `https://vidsrc.xyz/embed/tv/${imdbId}`
+                  : `https://vidsrc.xyz/embed/movie/${imdbId}`,
+                "2embed": type === "tv"
+                  ? `https://www.2embed.cc/embedtv/${imdbId}`
+                  : `https://www.2embed.cc/embed/${imdbId}`,
+                vidlink: type === "tv"
+                  ? `https://vidlink.pro/tv/${tmdbId}`
+                  : `https://vidlink.pro/movie/${tmdbId}`,
+              };
+
+              return imdbId || server === "vidlink" ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
+                  <div className="flex gap-2 mb-3">
+                    {(["vidsrc", "2embed", "vidlink"] as const).map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setServer(s)}
+                        className={`px-4 py-1.5 rounded-md font-body text-xs font-semibold transition-colors ${
+                          server === s
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        }`}
+                      >
+                        {s === "vidsrc" ? "VidSrc" : s === "2embed" ? "2Embed" : "VidLink"}
+                      </button>
+                    ))}
+                  </div>
+                  <iframe
+                    key={server}
+                    src={servers[server]}
+                    className="w-full aspect-video rounded-lg border border-border"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media"
+                  />
+                </motion.div>
+              ) : (
+                <div className="mt-8 aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
+                  <p className="text-muted-foreground font-body">Stream unavailable for this title</p>
+                </div>
+              );
+            })()}
           </motion.div>
 
           <div className="max-w-4xl mt-12 pb-12">
