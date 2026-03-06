@@ -13,7 +13,7 @@ const TmdbDetail = () => {
   const navigate = useNavigate();
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [server, setServer] = useState<"vidsrc" | "2embed" | "vidlink">("vidsrc");
 
   useEffect(() => {
@@ -158,8 +158,10 @@ const TmdbDetail = () => {
                     key={server}
                     src={servers[server]}
                     className="w-full aspect-video rounded-lg border border-border"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
                     allowFullScreen
-                    allow="autoplay; encrypted-media"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    referrerPolicy="no-referrer"
                   />
                 </motion.div>
               ) : (
