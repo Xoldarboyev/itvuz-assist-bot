@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import HeroBanner from "@/components/HeroBanner";
 import TmdbMovieGrid from "@/components/TmdbMovieGrid";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   fetchPopularMovies,
   fetchTrendingMovies,
@@ -18,6 +19,7 @@ const Index = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
+  const { t } = useLanguage();
 
   const [popular, setPopular] = useState<TmdbMovie[]>([]);
   const [trending, setTrending] = useState<TmdbMovie[]>([]);
@@ -75,17 +77,17 @@ const Index = () => {
       <div className={`${showSearch ? "pt-24" : "-mt-16"} relative z-10 pb-8`}>
         {showSearch ? (
           <TmdbMovieGrid
-            title={searchQuery ? `Results for "${searchQuery}"` : category === "series" ? "📺 TV Shows" : category === "movies" ? "🎬 Movies" : category === "new" ? "🆕 New & Popular" : ""}
+            title={searchQuery ? `${t.resultsFor} "${searchQuery}"` : category === "series" ? t.tvShowsSection : category === "movies" ? t.popularMovies : category === "new" ? t.newPopular : ""}
             movies={searchResults}
             loading={loading}
           />
         ) : (
           <>
-            <TmdbMovieGrid title="🔥 Trending This Week" movies={trending} loading={loading} />
-            <TmdbMovieGrid title="⭐ Popular Movies" movies={popular} loading={loading} />
-            <TmdbMovieGrid title="📺 TV Shows" movies={tvShows} loading={loading} />
-            <TmdbMovieGrid title="🏆 Top Rated" movies={topRated} loading={loading} />
-            <TmdbMovieGrid title="🎬 Upcoming" movies={upcoming} loading={loading} />
+            <TmdbMovieGrid title={t.trendingWeek} movies={trending} loading={loading} />
+            <TmdbMovieGrid title={t.popularMovies} movies={popular} loading={loading} />
+            <TmdbMovieGrid title={t.tvShowsSection} movies={tvShows} loading={loading} />
+            <TmdbMovieGrid title={t.topRated} movies={topRated} loading={loading} />
+            <TmdbMovieGrid title={t.upcoming} movies={upcoming} loading={loading} />
           </>
         )}
       </div>
