@@ -16,7 +16,7 @@ const TmdbDetail = () => {
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-  const [server, setServer] = useState<"vidsrc" | "2embed" | "vidlink">("vidsrc");
+  const [server, setServer] = useState<"vidsrc.to" | "vidsrc.xyz" | "2embed" | "vidlink">("vidsrc.to");
 
   useEffect(() => {
     const load = async () => {
