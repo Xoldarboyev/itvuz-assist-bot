@@ -16,7 +16,8 @@ const TmdbDetail = () => {
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-  
+  const [server, setServer] = useState<"streamsrc" | "superembed">("streamsrc");
+
 
   useEffect(() => {
     const load = async () => {
