@@ -149,6 +149,7 @@ const translations = {
     loading: "Loading...",
     notFound: "Not found",
     streamingPlaceholder: "🎬 Streaming player would appear here",
+    server: "Server",
   },
 } as const;
 
