@@ -16,7 +16,7 @@ const TmdbDetail = () => {
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-  const [server, setServer] = useState<"vidsrc" | "2embed" | "vidlink">("vidsrc");
+  const [server, setServer] = useState<"vidsrc.to" | "vidsrc.xyz" | "2embed" | "vidlink">("vidsrc.to");
 
   useEffect(() => {
     const load = async () => {
@@ -124,15 +124,24 @@ const TmdbDetail = () => {
               const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
               const tmdbId = detail.id;
               const servers = {
-                vidsrc: type === "tv" ? `https://vidsrc.xyz/embed/tv/${imdbId}` : `https://vidsrc.xyz/embed/movie/${imdbId}`,
+                "vidsrc.to": type === "tv" ? `https://vidsrc.to/embed/tv/${tmdbId}` : `https://vidsrc.to/embed/movie/${tmdbId}`,
+                "vidsrc.xyz": type === "tv" ? `https://vidsrc.xyz/embed/tv/${imdbId}` : `https://vidsrc.xyz/embed/movie/${imdbId}`,
                 "2embed": type === "tv" ? `https://www.2embed.cc/embedtv/${imdbId}` : `https://www.2embed.cc/embed/${imdbId}`,
                 vidlink: type === "tv" ? `https://vidlink.pro/tv/${tmdbId}` : `https://vidlink.pro/movie/${tmdbId}`,
               };
 
-              return imdbId || server === "vidlink" ? (
+              const serverLabels = {
+                "vidsrc.to": "VidSrc.to",
+                "vidsrc.xyz": "VidSrc.xyz",
+                "2embed": "2Embed",
+                vidlink: "VidLink",
+              };
+
+              return (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-                  <div className="flex gap-2 mb-3">
-                    {(["vidsrc", "2embed", "vidlink"] as const).map((s) => (
+                  <h2 className="font-display text-2xl text-foreground tracking-wide mb-4">{title?.toUpperCase()}</h2>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {(["vidsrc.to", "vidsrc.xyz", "2embed", "vidlink"] as const).map((s) => (
                       <button
                         key={s}
                         onClick={() => setServer(s)}
@@ -140,24 +149,22 @@ const TmdbDetail = () => {
                           server === s ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                         }`}
                       >
-                        {s === "vidsrc" ? "VidSrc" : s === "2embed" ? "2Embed" : "VidLink"}
+                        {serverLabels[s]}
                       </button>
                     ))}
                   </div>
-                  <iframe
-                    key={server}
-                    src={servers[server]}
-                    className="w-full aspect-video rounded-lg border border-border"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
-                    allowFullScreen
-                    allow="autoplay; encrypted-media; fullscreen"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="relative w-full rounded-lg overflow-hidden border border-border bg-card" style={{ paddingBottom: "56.25%" }}>
+                    <iframe
+                      key={server}
+                      src={servers[server]}
+                      className="absolute inset-0 w-full h-full"
+                      allowFullScreen
+                      allow="autoplay; encrypted-media; fullscreen"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  <p className="mt-4 font-body text-muted-foreground leading-relaxed">{detail.overview}</p>
                 </motion.div>
-              ) : (
-                <div className="mt-8 aspect-video rounded-lg bg-card border border-border flex items-center justify-center">
-                  <p className="text-muted-foreground font-body">{t.streamUnavailable}</p>
-                </div>
               );
             })()}
           </motion.div>
