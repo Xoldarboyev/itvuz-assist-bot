@@ -16,7 +16,7 @@ const TmdbDetail = () => {
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-  const [server, setServer] = useState<"vidsrc.to" | "vidsrc.xyz" | "2embed" | "vidlink">("vidsrc.to");
+  
 
   useEffect(() => {
     const load = async () => {
@@ -120,53 +120,21 @@ const TmdbDetail = () => {
               </Button>
             </div>
 
-            {playing && (() => {
-              const imdbId = detail.imdb_id || detail.external_ids?.imdb_id;
-              const tmdbId = detail.id;
-              const servers = {
-                "vidsrc.to": type === "tv" ? `https://vidsrc.to/embed/tv/${tmdbId}` : `https://vidsrc.to/embed/movie/${tmdbId}`,
-                "vidsrc.xyz": type === "tv" ? `https://vidsrc.xyz/embed/tv/${imdbId}` : `https://vidsrc.xyz/embed/movie/${imdbId}`,
-                "2embed": type === "tv" ? `https://www.2embed.cc/embedtv/${imdbId}` : `https://www.2embed.cc/embed/${imdbId}`,
-                vidlink: type === "tv" ? `https://vidlink.pro/tv/${tmdbId}` : `https://vidlink.pro/movie/${tmdbId}`,
-              };
-
-              const serverLabels = {
-                "vidsrc.to": "VidSrc.to",
-                "vidsrc.xyz": "VidSrc.xyz",
-                "2embed": "2Embed",
-                vidlink: "VidLink",
-              };
-
-              return (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-                  <h2 className="font-display text-2xl text-foreground tracking-wide mb-4">{title?.toUpperCase()}</h2>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {(["vidsrc.to", "vidsrc.xyz", "2embed", "vidlink"] as const).map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => setServer(s)}
-                        className={`px-4 py-1.5 rounded-md font-body text-xs font-semibold transition-colors ${
-                          server === s ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                        }`}
-                      >
-                        {serverLabels[s]}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="relative w-full rounded-lg overflow-hidden border border-border bg-card" style={{ paddingBottom: "56.25%" }}>
-                    <iframe
-                      key={server}
-                      src={servers[server]}
-                      className="absolute inset-0 w-full h-full"
-                      allowFullScreen
-                      allow="autoplay; encrypted-media; fullscreen"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <p className="mt-4 font-body text-muted-foreground leading-relaxed">{detail.overview}</p>
-                </motion.div>
-              );
-            })()}
+            {playing && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
+                <h2 className="font-display text-2xl text-foreground tracking-wide mb-4">{title?.toUpperCase()}</h2>
+                <div className="relative w-full rounded-lg overflow-hidden border border-border bg-card" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    src={type === "tv" ? `https://streamsrc.cc/watch/tv/tmdbid=${detail.id}` : `https://streamsrc.cc/watch/movie/tmdbid=${detail.id}`}
+                    className="absolute inset-0 w-full h-full"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media; fullscreen"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <p className="mt-4 font-body text-muted-foreground leading-relaxed">{detail.overview}</p>
+              </motion.div>
+            )}
           </motion.div>
 
           <div className="max-w-4xl mt-12 pb-12">
