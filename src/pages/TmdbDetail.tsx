@@ -16,7 +16,8 @@ const TmdbDetail = () => {
   const [detail, setDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-  
+  const [server, setServer] = useState<"streamsrc" | "superembed">("streamsrc");
+
 
   useEffect(() => {
     const load = async () => {
@@ -123,9 +124,38 @@ const TmdbDetail = () => {
             {playing && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
                 <h2 className="font-display text-2xl text-foreground tracking-wide mb-4">{title?.toUpperCase()}</h2>
+
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    size="sm"
+                    variant={server === "streamsrc" ? "default" : "outline"}
+                    onClick={() => setServer("streamsrc")}
+                    className="font-body text-xs"
+                  >
+                    Streamsrc
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={server === "superembed" ? "default" : "outline"}
+                    onClick={() => setServer("superembed")}
+                    className="font-body text-xs"
+                  >
+                    SuperEmbed
+                  </Button>
+                </div>
+
                 <div className="relative w-full rounded-lg overflow-hidden border border-border bg-card" style={{ paddingBottom: "56.25%" }}>
                   <iframe
-                    src={type === "tv" ? `https://streamsrc.cc/watch/tv/tmdbid=${detail.id}` : `https://streamsrc.cc/watch/movie/tmdbid=${detail.id}`}
+                    key={server}
+                    src={
+                      server === "superembed"
+                        ? type === "tv"
+                          ? `https://multiembed.mov/?video_id=${detail.id}&tmdb=1&s=1&e=1`
+                          : `https://multiembed.mov/?video_id=${detail.id}&tmdb=1`
+                        : type === "tv"
+                          ? `https://streamsrc.cc/watch/tv/tmdbid=${detail.id}`
+                          : `https://streamsrc.cc/watch/movie/tmdbid=${detail.id}`
+                    }
                     className="absolute inset-0 w-full h-full"
                     allowFullScreen
                     allow="autoplay; encrypted-media; fullscreen"
