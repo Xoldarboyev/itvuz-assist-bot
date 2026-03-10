@@ -80,6 +80,7 @@ const translations = {
     loading: "Yuklanmoqda...",
     notFound: "Topilmadi",
     streamingPlaceholder: "🎬 Bu yerda oqim pleyeri ko'rsatiladi",
+    server: "Server",
   },
   en: {
     home: "Home",
